@@ -1,19 +1,29 @@
-//(function (exports, require, module, __filename, __dirname)
+const EventEmitter = require('events');
+
 var url = 'https://mylogger.io/log';
 
-function log(message){
-    //Send HTTP request;
-    console.log(message);
+/**
+ * Extends the EventEmitter class and adds a .log(message) function.
+ * raises 'logging' and 'messageLogged' events before and after logging.
+ * 
+ * Create a new instance of the logger class by using
+ * Logger = require('logger');
+ * logger = new Logger();
+ * logger.log(....); 
+ */
+class Logger extends EventEmitter{
+    log(message){
+        this.emit('logging')
+        
+        console.log(message);
+        
+        //the current context.emit
+        this.emit('messageLogged', {
+            id  : 1,
+            url : url 
+        });
+    }
 }
 
-module.exports.log = log; //add the log function to this module's exports
-module.exports.obj = {
-    field1 : 10,
-    field2 : 20,
-    field3 : "12312"
-}; //add a play object
+module.exports = Logger;
 
-//this works because exports is a reference to
-exports.Func = function(){
-    return "!";
-}
