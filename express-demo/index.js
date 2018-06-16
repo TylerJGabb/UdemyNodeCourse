@@ -1,3 +1,4 @@
+const debug = require('debug')('app:startup');
 const config = require('config')
 const helmet = require('helmet');
 const Joi = require('joi')
@@ -15,12 +16,14 @@ console.log('Application Name: ' + config.get('name'));
 console.log('Mail Server: ' + config.get('mail.host'));
 console.log('Mail Server: ' + config.get('mail.password'));
 
-
-//process.env.NODE_ENV
+//process.env.NODE_ENV = 'development'
 if(app.get('env') === 'development'){
     app.use(morgan('tiny'));
-    console.log('morgan logging enabled');
+    
+    //process.env.DEBUG='app:startup'
+    debug('Morgan enabled...');
 }
+
 
 const courses = [
     { id: 1, name: 'course1' },
