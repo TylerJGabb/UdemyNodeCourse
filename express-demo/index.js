@@ -1,17 +1,19 @@
+const helmet = require('helmet');
 const Joi = require('joi')
-const logger = require('./logger');
-const authenticator = require('./authenticator')
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({
-    extended : true
-}));
+app.use(express.urlencoded( {extended : true}));
 app.use(express.static('public')); //localhost:3000/readme.txt
+app.use(helmet());
 
-app.use(logger);
-app.use(authenticator);
+//process.env.NODE_ENV
+if(app.get('env') === 'development'){
+    app.use(morgan('tiny'));
+    console.log('morgan logging enabled');
+}
 
 const courses = [
     { id: 1, name: 'course1' },
