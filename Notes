@@ -1,0 +1,4 @@
+To set an environment variable in powershell type
+    >> $env.VARIABLE = value
+
+    this VARIABLE is now acessable in our js applications via process.env.VARIABLE
