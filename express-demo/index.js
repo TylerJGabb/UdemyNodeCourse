@@ -1,3 +1,4 @@
+const config = require('config')
 const helmet = require('helmet');
 const Joi = require('joi')
 const express = require('express');
@@ -8,6 +9,12 @@ app.use(express.json());
 app.use(express.urlencoded( {extended : true}));
 app.use(express.static('public')); //localhost:3000/readme.txt
 app.use(helmet());
+
+//Configuration
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail Server: ' + config.get('mail.host'));
+console.log('Mail Server: ' + config.get('mail.password'));
+
 
 //process.env.NODE_ENV
 if(app.get('env') === 'development'){
