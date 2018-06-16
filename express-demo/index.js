@@ -1,7 +1,17 @@
 const Joi = require('joi')
+const logger = require('./logger');
+const authenticator = require('./authenticator')
 const express = require('express');
 const app = express();
+
 app.use(express.json());
+app.use(express.urlencoded({
+    extended : true
+}));
+app.use(express.static('public')); //localhost:3000/readme.txt
+
+app.use(logger);
+app.use(authenticator);
 
 const courses = [
     { id: 1, name: 'course1' },
