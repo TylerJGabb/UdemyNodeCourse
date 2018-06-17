@@ -19,7 +19,7 @@ const courseSchema = new mongoose.Schema({
 
 const Course = mongoose.model('Course', courseSchema);
 
-const p = new Promise((resolve, reject) => {
+const exercise1 = new Promise((resolve, reject) => {
     const courses = Course
     .find({isPublished : true, tags : 'backend'})
     .sort({name : 1})
@@ -27,5 +27,14 @@ const p = new Promise((resolve, reject) => {
     resolve(courses)
 });
 
-p.then((courses) => console.log(courses))
+const exercise2 = new Promise(resolve => {
+    const courses = Course
+    .find({isPublished : true})
+    .or([{tags : 'frontend'}, {tags: 'backend'}])
+    .sort('-price')
+    .select('name author price')
+    resolve(courses);
+});
+
+exercise2.then((courses) => console.log(courses))
 .catch((err) => console.log(err));
