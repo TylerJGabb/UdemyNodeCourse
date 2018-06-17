@@ -30,4 +30,16 @@ async function saveCourseSync(course){
     const result = await course.save();
     console.log(result);
 }
-saveCourseSync(course);
+
+async function getCourses(){
+    const courses = await Course
+        .find({ author: 'Mosh', isPublished: true})
+        .limit(10)
+        .sort({name : 1})//sort by name in ascending order
+        .select({name : 1, tags: 1})// only select the name and the tags
+    console.log(courses);
+}
+
+getCourses();
+
+//saveCourseSync(course);
