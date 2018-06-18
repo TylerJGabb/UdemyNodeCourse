@@ -48,5 +48,27 @@ const exercise3 = new Promise(resolve => {
     resolve(courses);
 });
 
-exercise3.then((courses) => console.log(courses))
-.catch((err) => console.log(err));
+async function updateCourseQueryFirst(id){
+    const course = await Course.findById(id);
+    if(!course) return;
+    course.set({
+        isPublished : true,
+        author : 'Another Author'
+    });
+    course.save();
+    return course;
+}
+
+async function updateCourseDirectly(id){
+    
+}
+
+async function run(){
+    const updated = await updateCourseQueryFirst("5b27177284ed3da9b9aafc32");
+    console.log(updated);
+}
+
+run()
+
+// exercise3.then((courses) => console.log(courses))
+// .catch((err) => console.log(err));

@@ -54,8 +54,9 @@ async function getCourses(){
         //.count(); //count the number of matched documents
         
         .select({name : 1, tags: 1})// only select the name and the tags
-    console.log(courses);
+    return courses
 }
+
 
 async function run(){
     const courses = await getCourses();
