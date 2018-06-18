@@ -51,6 +51,7 @@ const exercise3 = new Promise(resolve => {
 async function updateCourseQueryFirst(id){
     const course = await Course.findById(id);
     if(!course) return;
+    if(course.isPublished) return;
     course.set({
         isPublished : true,
         author : 'Another Author'
@@ -59,13 +60,29 @@ async function updateCourseQueryFirst(id){
     return course;
 }
 
-async function updateCourseDirectly(id){
-    
+async function updateCourseDirectlyAndReturnUpdated(id){
+    const course = await Course.findByIdAndUpdate(id, {
+        $set : {
+            author : 'Jason',
+            isPublished : true
+        }
+    }, {new : true}) //new means we find by Id but return it after the update takes place
+    return course;
+}
+
+async function updateCourseDirectlyAndReturnResult(id){
+    const result = await Course.update({_id : id} ,{
+        $set : {
+            author : 'Jason',
+            isPublished : true
+        }
+    });
+    return result;
 }
 
 async function run(){
-    const updated = await updateCourseQueryFirst("5b27177284ed3da9b9aafc32");
-    console.log(updated);
+    const updatedCourse = await updateCourseDirectly("5b27177284ed3da9b9aafc35");
+    console.log(updatedCourse);
 }
 
 run()
