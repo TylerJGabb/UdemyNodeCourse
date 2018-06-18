@@ -57,5 +57,8 @@ async function getCourses(){
     console.log(courses);
 }
 
-getCourses();
-//saveCourseSync(course);
+async function run(){
+    const courses = await getCourses();
+    console.log(courses);
+}
+run();

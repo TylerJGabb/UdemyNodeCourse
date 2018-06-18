@@ -29,12 +29,24 @@ const exercise1 = new Promise((resolve, reject) => {
 
 const exercise2 = new Promise(resolve => {
     const courses = Course
-    .find({isPublished : true})
-    .or([{tags : 'frontend'}, {tags: 'backend'}])
+    .find({isPublished : true, tags : { $in : ['backend', 'frontend']}})
+    //.or([{tags : 'frontend'}, {tags: 'backend'}])
     .sort('-price')
     .select('name author price')
     resolve(courses);
 });
+ 
+const exercise3 = new Promise(resolve => {
+    const courses = Course
+    .find({isPublished : true})
+    .or([
+        {price : {$gte : 15}},
+        {name : /.*by.*/i}
+    ])
+    .sort('-price')
+    .select('name author price');
+    resolve(courses);
+});
 
-exercise2.then((courses) => console.log(courses))
+exercise3.then((courses) => console.log(courses))
 .catch((err) => console.log(err));
