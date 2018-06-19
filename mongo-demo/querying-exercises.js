@@ -17,7 +17,10 @@ const courseSchema = new mongoose.Schema({
     price : Number
 });
 
-const Course = mongoose.model('Course', courseSchema);
+//The plural version of the string you pass as the first argument to the 
+//.model method is the collection which will be searched. 
+//If the collection does not exist and you attempt to create a record then it will be created
+const Course = mongoose.model('course', courseSchema);
 
 const exercise1 = new Promise((resolve, reject) => {
     const courses = Course
@@ -91,8 +94,8 @@ async function findAndRemoveCourse(id){
 }
 
 async function run(){
-    const result = await removeCourse("5b27177284ed3da9b9aafc35");
-    console.log(result);
+    const test = await Course.find({});
+    console.log(test);
 }
 
 run()
