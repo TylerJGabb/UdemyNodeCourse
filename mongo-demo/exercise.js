@@ -80,9 +80,14 @@ async function updateCourseDirectlyAndReturnResult(id){
     return result;
 }
 
+async function removeCourse(id){
+    const result = await Course.deleteOne({_id : id});
+    console.log(result);
+}
+
 async function run(){
-    const updatedCourse = await updateCourseDirectly("5b27177284ed3da9b9aafc35");
-    console.log(updatedCourse);
+    const result = await removeCourse("5b27177284ed3da9b9aafc35");
+    console.log(result);
 }
 
 run()
