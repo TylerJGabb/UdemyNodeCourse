@@ -85,6 +85,11 @@ async function removeCourse(id){
     console.log(result);
 }
 
+async function findAndRemoveCourse(id){
+    const course = await Course.findByIdAndRemove(id);
+    return course;
+}
+
 async function run(){
     const result = await removeCourse("5b27177284ed3da9b9aafc35");
     console.log(result);
