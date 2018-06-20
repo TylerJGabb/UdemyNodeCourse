@@ -39,6 +39,7 @@ const exercise2 = new Promise(resolve => {
     resolve(courses);
 });
  
+//courses which are published, and whose price is > 15 or the name contains the string 'by'
 const exercise3 = new Promise(resolve => {
     const courses = Course
     .find({isPublished : true})
