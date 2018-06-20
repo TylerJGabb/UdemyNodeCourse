@@ -17,12 +17,23 @@ const courseSchema = new mongoose.Schema({
         type: String,
         enum: ['web', 'mobile', 'network'] //category can be only one of thise values
     },
-    tags : [String],
+    tags : {
+        type: Array,
+        validate: {
+            validator: function(value) {
+                return value && value.length > 0;
+            },
+            message: 'A course should have at least one tag'
+        }
+    },
     date :{
         type : Date,
         default : Date.now()
     },
-    author : String,
+    author : {
+        type: String,
+        required: function() {return this.isPublished}
+    },
     isPublished : Boolean,
     price : {
         type : Number,
@@ -37,12 +48,12 @@ const Course = mongoose.model('course', courseSchema);
 
 async function createBadCourse(){
     const badCourse = new Course({
-        name: 'Another New Course',
+        //name: 'Another New Course',
         author: 'Foo',
-        tags: ['bar','qux'],
+        tags: null,
         isPublished : true,
         price: 15,
-        category : 'not in the enums'
+        category : 'web'
     });
     const result = await badCourse.save();
     return result; //throws rejected promise because fails validation
