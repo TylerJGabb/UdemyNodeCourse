@@ -1,56 +1,54 @@
 const express = require('express');
 const router = express.Router();
+const Joi = require('joi');
+const mongoose = require('mongoose');
 
-const genres = [
-    {id: 1, name: 'Action'},
-    {id: 2, name: 'Horror'},
-    {id: 3, name: 'Romance'},
-]
+const Genre = mongoose.model('genre', new mongoose.Schema({
+    name: {
+        type: String,
+        required : true,
+        minlength : 3,
+        maxlength : 20
+    }
+}));
 
 //we are assumed to be in /api/genres/
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const genres = await Genre.find().sort('name');
     res.send(genres).status(200);
 });
 
-router.get('/:id', (req, res) => {
-    const genre = genres.find(g => g.id === parseInt(req.params.id));
-    if(!genre) return res.status(404).send(`genre with id of '${req.params.id}' not found`);
-
-    res.status(200).send(genre);
+router.get('/:id', async (req, res) => {
+    const id = req.params.id;
+    const g = await Genre.findById(id);
+    if(!g) return res.status(404).send();
+    return res.send(g).status(200);
 });
 
-router.post('/', (req, res) => {
-    const {error} = validateGenre(req.body);
-    if(error) return res.status(400).send(error.details);
-
-    const genre = {
-        id: genres.length + 1,
-        name : req.body.name
-    }
-
-    genres.push(genre);
-    res.status(200).send(genre)
+router.post('/', async (req, res) => {
+    let genre = new Genre({name : req.body.name});
+    genre.save() //genre is a variable, and can be changed by the save method
+    res.send(genre).status(200);
 });
 
 router.put('/:id', (req, res) => {
-    const genre = genres.find(g => g.id === parseInt(req.params.id));
-    if(!genre) return res.status(404).send(`genre with id of '${req.params.id}' not found`);
-
-    const { error } = validateGenre(req.body);
-    if(error) return res.status(400).send(error.details);
-
-    genre.name = req.body.name;
-    res.status(200).send(genre);
+    const id = req.params.id;
+    const {error} = validateGenre(req.body);
+    if(error) return res.status(400).send(error);
+    Genre.findByIdAndUpdate(id, {
+        $set: {
+            name : req.body.name
+        }
+    }, {new : true})
+    .then(g => res.send(g).status(200))
+    .catch(e => res.status(500).send(e));
 })
 
 router.delete('/:id', (req, res) => {
-    const genre = genres.find(g => g.id === parseInt(req.params.id));
-    if(!genre) return res.status(404).send(`genre with id of '${req.params.id}' not found`);
-
-    const index = genres.indexOf(genre);
-    genres.splice(index,1);
-
-    res.send(genres).status(200);
+    const id = req.params.id;
+    Genre.findByIdAndRemove(id)
+    .then(result => res.status(200).send(result))
+    .catch(e => res.status(500).send(e));
 });
 
 

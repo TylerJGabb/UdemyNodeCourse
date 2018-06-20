@@ -1,7 +1,15 @@
 const express = require('express');
+const startupDebug = require('debug')('app:start');
 const app = express();
 const morgan = require('morgan');
-app.use(express.json());
+const mongoose = require('mongoose');
+const mongoDebug = require('debug')('app:mongo')
+
+//connects to the database
+mongoose.connect('mongodb://localhost/vidly')
+    .then(() => mongoDebug('Genres Connected to MongoDB...'))
+    .catch((err) => mongoDebug('Could not connect to MongoDB...', err));
+
 
 //Middleware
 app.use(express.json());
@@ -14,4 +22,4 @@ app.use('/api/genres', genres);
 app.use(morgan('tiny'));
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on ${port}.`));
+app.listen(port, () => startupDebug(`Listening on ${port}.`));
