@@ -7,19 +7,21 @@ const mongoDebug = require('debug')('app:mongo')
 
 //connects to the database
 mongoose.connect('mongodb://localhost/vidly')
-    .then(() => mongoDebug('Genres Connected to MongoDB...'))
+    .then(() => mongoDebug('Connected to MongoDB...'))
     .catch((err) => mongoDebug('Could not connect to MongoDB...', err));
 
 
 //Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('tiny'));
 //app.use(express.static('public'));
 
 const genres = require('./routes/genres');
 app.use('/api/genres', genres);
 
-app.use(morgan('tiny'));
+const customers = require('./routes/customers');
+app.use('/api/customers', customers);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => startupDebug(`Listening on ${port}.`));
