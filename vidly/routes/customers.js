@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Customer, validate } = require('../models/customer');
 
-
-
 router.get('/', async (req, res) => {
     res.send(await Customer.find()).status(200);
 })
@@ -18,7 +16,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req,res) => {
-    const {error} = validateCustomer(req.body);
+    const {error} = validate(req.body);
     if(error) return res.send(error).status(400);
     let c = new Customer(req.body);
     c.save()
@@ -28,7 +26,7 @@ router.post('/', async (req,res) => {
 
 router.put('/:id', async (req, res) => {
     const id = req.params.id;
-    const {error} = validateCustomer(req.body);
+    const {error} = validate(req.body);
     if(error) return res.send(error).status(400);
     let c;
     try{c = await Customer.findById(id);}
