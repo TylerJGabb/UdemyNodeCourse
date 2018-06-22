@@ -27,14 +27,14 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     let genre = new Genre({name : req.body.name});
-    genre.save() //genre is a variable, and can be changed by the save method
+    await genre.save() //genre is a variable, and can be changed by the save method
     res.send(genre).status(200);
 });
 
 router.put('/:id', (req, res) => {
     const id = req.params.id;
-    const {error} = validateGenre(req.body);
-    if(error) return res.status(400).send(error);
+    const {e} = validateGenre(req.body);
+    if(e) return res.status(400).send(e);
     Genre.findByIdAndUpdate(id, {
         $set: {
             name : req.body.name
