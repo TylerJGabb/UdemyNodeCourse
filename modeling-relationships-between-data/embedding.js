@@ -34,4 +34,13 @@ async function listCourses() {
   console.log(courses);
 }
 
-createCourse('Node Course', new Author({ name: 'Mosh' }));
+async function updateAuthor(courseId){
+  const course = await Course.findById(courseId);
+  course.author.name = 'Tyler Gabb';
+  course.save(); //NOT course.author.save(), that does not exist.
+  //the author exists only in the context of course
+}
+
+// createCourse('Node Course', new Author({ name: 'Mosh' }));
+
+updateAuthor('5b2da05d549e644d10ff7cf1');
