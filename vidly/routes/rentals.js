@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const { Rental, validate } = require('../models/rental');
 const { Movie } = require('../models/movie')
 const { Customer } = require('../models/customer')
+const Fawn = require('fawn');
+Fawn.init(mongoose);
+
 
 router.post('/', async (req, res) => {
     //do validation of client request
@@ -39,12 +42,19 @@ router.post('/', async (req, res) => {
         }
     })
 
-    rental.save();
-
-    movie.numberInStock--;
-    movie.save();
-
-    res.status(200).send(rental);
+    try{
+        new Fawn.Task()
+            .save('rentals', rental) //collection name case sentitive
+            .update('movies', {_id: movie._id} , {
+                $inc: {numberInStock: -1}
+            })
+            .run()
+        res.status(200).send(rental);
+            
+    }
+    catch(ex) {
+        res.status(500).send('something failed');
+    }
 });
 
 
