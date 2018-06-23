@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 //app.use(express.static('public'));
 
+//Routes
 const genres = require('./routes/genres');
 app.use('/api/genres', genres);
 
@@ -25,6 +26,9 @@ app.use('/api/customers', customers);
 
 const movies = require('./routes/movies');
 app.use('/api/movies', movies);
+
+const rentals = require('./routes/rentals')
+app.use('/api/rentals', rentals);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => startupDebug(`Listening on ${port}.`));
