@@ -22,7 +22,10 @@ router.post('/', async(req, res) => {
         title : req.body.title,
         numberInStock : req.body.numberInStock,
         dailyRentalRate : req.body.dailyRentalRate,
-        genre
+        genre : {
+            _id : genre._id,
+            name : genre.name
+        }
     });
 
     try{ movie.save() }
