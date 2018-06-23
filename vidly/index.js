@@ -4,6 +4,8 @@ const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const mongoDebug = require('debug')('app:mongo')
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 
 //connects to the database
 mongoose.connect('mongodb://localhost/vidly')

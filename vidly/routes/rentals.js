@@ -15,17 +15,13 @@ router.post('/', async (req, res) => {
 
     //check existance of movie
     const movieId = req.body.movieId;
-    let movie;
-    try { movie = await Movie.findById(movieId); }
-    catch (e) { return res.status(500).send(e) }
+    const movie = await Movie.findById(movieId);
     if (!movie) return res.status(404).send(`No movie found for id ${movieId}`);
     if(movie.numberInStock === 0) return res.status(400).send('No more of that movie in stock');
 
     //check existance of customer
     const customerId = req.body.customerId;
-    let customer;
-    try { customer = await Customer.findById(customerId); }
-    catch (e) { return res.status(500).send(e) }
+    const customer = await Customer.findById(customerId);
     if (!customer) return res.status(404).send(`No customer found for id ${customerId}`);
 
     let rental = new Rental({

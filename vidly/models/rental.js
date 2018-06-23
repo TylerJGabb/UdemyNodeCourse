@@ -1,7 +1,7 @@
 //a rental is a relationship between a customer and a movie
 //a rental will have a movie, customer, dateRenter, and dateReturned
 const mongoose = require('mongoose');
-const Joi = require('joi')
+const Joi = require('joi');
 
 const Rental = mongoose.model('Rental', new mongoose.Schema({
     customer: {
@@ -56,8 +56,8 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
 
 function validateRental(rental) {
     const schema = {
-        customerId: Joi.string().min(24).max(24).required(),
-        movieId: Joi.string().min(24).max(24).required(),
+        customerId: Joi.objectId().required(),
+        movieId: Joi.objectId().required(),
     }
     return Joi.validate(rental, schema);
 }
