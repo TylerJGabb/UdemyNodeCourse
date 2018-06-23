@@ -28,6 +28,9 @@ const Movie = mongoose.model('Movie', new mongoose.Schema({
     }
 }));
 
+//The Joi schema dictates what we expect from the user.
+//We want the user to hand us a valid genreId, not make their own 
+//genre object.
 function validateMovie(movie){
     const schema = {
         title: Joi.string().min(5).max(50).required(),
