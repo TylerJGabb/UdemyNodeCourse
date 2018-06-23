@@ -15,7 +15,8 @@ const Author = mongoose.model('Author', authorSchema);
 const Course = mongoose.model('Course', new mongoose.Schema({
   name: String,
   author : {
-    type : authorSchema
+    type : authorSchema,
+    required : true
   }
 }));
 
