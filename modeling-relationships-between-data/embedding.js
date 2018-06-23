@@ -49,10 +49,19 @@ async function updateAuthorDirectly(courseId){
   }); //updated author's name directly
 }
 
-createCourse('Node Course', [
-  new Author({ name: 'Mosh' }),
-  new Author({ name: 'John' })
-]);
+async function addAuthor(courseId, author){
+  const course = await Course.findById(courseId);
+  course.authors.push(author);
+  course.save();
+}
+
+
+addAuthor('5b2da775a5eb4f41802d4387', new Author({name : "Tyler"}));
+
+// createCourse('Node Course', [
+//   new Author({ name: 'Mosh' }),
+//   new Author({ name: 'John' })
+// ]);
 
 // updateAuthor('5b2da05d549e644d10ff7cf1');
 
