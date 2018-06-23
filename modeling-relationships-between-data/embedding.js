@@ -41,6 +41,16 @@ async function updateAuthor(courseId){
   //the author exists only in the context of course
 }
 
+async function updateAuthorDirectly(courseId){
+  const course = await Course.update({_id : courseId},{
+    $set : {
+      'author.name' : 'John Smith'
+    }
+  }); //updated author's name directly
+}
+
 // createCourse('Node Course', new Author({ name: 'Mosh' }));
 
-updateAuthor('5b2da05d549e644d10ff7cf1');
+// updateAuthor('5b2da05d549e644d10ff7cf1');
+
+updateAuthorDirectly('5b2da05d549e644d10ff7cf1')
