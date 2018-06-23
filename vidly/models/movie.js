@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-const {genreSchema, validate} = require('./genre');
+const {genreSchema} = require('./genre');
 
 //embed an array of genre document inside of a movie
 
-const Movie = mongoose.Model('Movie',new mongoose.Schema({
+const Movie = mongoose.model('Movie', new mongoose.Schema({
     title: {
         type: String,
         required : true,
@@ -33,8 +33,8 @@ function validateMovie(movie){
     const schema = {
         title: Joi.string().min(5).max(50).required(),
         genre: Joi.array().min(1).required(),
-        numberInStock : Joi.number().min().max(20),
-        dailyRentalRate : Joi.number().required()
+        numberInStock : Joi.number().min(0).max(20),
+        dailyRentalRate : Joi.number().min(0.0).max(50.00).required()
     };
     return Joi.validate(movie, schema);
 }
