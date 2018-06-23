@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {Movie, validate} = require('../models/movie');
+const {Genre} = require('../models/genre');
 
 router.get('/', async (req, res) => {
     const movies = await Movie.find().sort('title');
@@ -8,11 +9,25 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async(req, res) => {
-    const {error} = validate(req.body)
+    const {error} = validate(req.body);
     if(error) return res.status(400).send(error);
-    let movie = new Movie(req.body);
-    try{ await movie.save(); } 
-    catch (err) { return res.status(500).send(err);}
+
+    const genreId = req.body.genreId;
+    let genre;
+    try{ genre = await Genre.findById(genreId); }
+    catch(e) { return res.status(500).send(e); }
+    if(!genre) return res.status(404).send(`No genre found for id ${genreId}`);
+
+    let movie = new Movie({
+        title : req.body.title,
+        numberInStock : req.body.numberInStock,
+        dailyRentalRate : req.body.dailyRentalRate,
+        genre
+    });
+
+    try{ movie.save() }
+    catch(e) {req.status(500).send(e); }
+
     res.status(200).send(movie);
 });
 
