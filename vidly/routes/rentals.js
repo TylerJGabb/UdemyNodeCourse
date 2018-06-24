@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 const { Rental, validate } = require('../models/rental');
 const { Movie } = require('../models/movie')
 const { Customer } = require('../models/customer')
+const auth = require('../middleware/auth')
+const _ = require('lodash')
 const Fawn = require('fawn');
 Fawn.init(mongoose);
 
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     //do validation of client request
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -25,19 +27,11 @@ router.post('/', async (req, res) => {
     if (!customer) return res.status(404).send(`No customer found for id ${customerId}`);
 
     let rental = new Rental({
-        movie: {
-            _id: movie._id,
-            title: movie.title,
-            dailyRentalRate: movie.dailyRentalRate
-        },
-        customer: {
-            _id: movie._id,
-            name: customer.name,
-            phone: customer.phone,
-            isGold: customer.isGold
-        }
+        movie: _.pick(movie,['_id','title', 'dailyRentalRate']),
+        customer: _.pick(customer, ['_id','name','phone','isGold']),
     })
 
+    //transacted movie rental
     try{
         new Fawn.Task()
             .save('rentals', rental) //collection name case sentitive

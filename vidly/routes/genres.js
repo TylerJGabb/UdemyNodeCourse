@@ -25,7 +25,7 @@ router.post('/', auth, async (req, res) => {
     res.send(genre).status(200);
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', auth, (req, res) => {
     const id = req.params.id;
     const {e} = validate(req.body);
     if(e) return res.status(400).send(e);
@@ -38,7 +38,7 @@ router.put('/:id', (req, res) => {
     .catch(e => res.status(500).send(e));
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth, (req, res) => {
     const id = req.params.id;
     Genre.findByIdAndRemove(id)
     .then(result => res.status(200).send(result))

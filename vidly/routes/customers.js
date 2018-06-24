@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Customer, validate } = require('../models/customer');
+const auth = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
     res.send(await Customer.find()).status(200);
@@ -15,7 +16,7 @@ router.get('/:id', async (req, res) => {
     return res.status(200).send(c);
 });
 
-router.post('/', async (req,res) => {
+router.post('/', auth, async (req,res) => {
     const {error} = validate(req.body);
     if(error) return res.send(error).status(400);
     let c = new Customer(req.body);
@@ -24,7 +25,7 @@ router.post('/', async (req,res) => {
         .catch(err => res.send(err).status(500));
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     const id = req.params.id;
     const {error} = validate(req.body);
     if(error) return res.send(error).status(400);
@@ -40,7 +41,7 @@ router.put('/:id', async (req, res) => {
         .catch(e => res.status(500).send(e));
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     const id = req.params.id;
     Customer.findByIdAndRemove(id)
     .then(r => res.status(200).send(r))

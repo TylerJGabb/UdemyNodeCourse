@@ -4,6 +4,8 @@ const { User } = require('../models/user');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 
+//A Route used for authenticating users, a user's credentials are send to this endpoint
+//and it will verify the authentication of their credentials. 
 router.post('/', async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
