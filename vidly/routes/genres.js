@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {Genre, validate} = require('../models/genre');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 //we are assumed to be in /api/genres/
 router.get('/', async (req, res) => {
@@ -38,7 +39,8 @@ router.put('/:id', auth, (req, res) => {
     .catch(e => res.status(500).send(e));
 })
 
-router.delete('/:id', auth, (req, res) => {
+router.delete('/:id', [auth, admin], (req, res) => {
+    // req -> auth -> admin -> here
     const id = req.params.id;
     Genre.findByIdAndRemove(id)
     .then(result => res.status(200).send(result))
