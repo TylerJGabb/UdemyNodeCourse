@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {Genre, validate} = require('../models/genre');
+const auth = require('../middleware/auth');
 
 //we are assumed to be in /api/genres/
 router.get('/', async (req, res) => {
@@ -15,7 +16,10 @@ router.get('/:id', async (req, res) => {
     return res.send(g).status(200);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
+    const {error} = validate(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
     let genre = new Genre({name : req.body.name});
     await genre.save() //genre is a variable, and can be changed by the save method
     res.send(genre).status(200);

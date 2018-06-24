@@ -14,6 +14,7 @@ const rentals = require('./routes/rentals')
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 
+//$env:vidly_jwtPrivateKey='12345'
 if(!config.get('jwtPrivateKey')){
     console.error('FATAL ERROR: vidly_jwtPrivateKey environment variable is not set, Authentication will not work');
     process.exit(1);
@@ -29,7 +30,6 @@ mongoose.connect('mongodb://localhost/vidly')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
-//app.use(express.static('public'));
 
 //Routes
 app.use('/api/genres', genres);
