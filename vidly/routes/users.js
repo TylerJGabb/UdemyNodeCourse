@@ -3,10 +3,12 @@ const router = express.Router();
 const { User, validate } = require('../models/user');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const auth = require('../middleware/auth');//authorization
 
-router.get('/', async (req, res) => {
-    const users = await User.find().sort('email');
-    res.status(200).send(users);
+router.get('/me', auth, async (req, res) => {
+    console.log(req.user);
+    const user = await User.findById(req.user._id).select('-password'); //req.user introduced by authorization middleware
+    res.status(200).send(user);
 });
 
 router.post('/', async (req, res) => {
