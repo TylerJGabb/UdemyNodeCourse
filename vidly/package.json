@@ -16,6 +16,7 @@
     "fawn": "^2.1.5",
     "joi": "^13.4.0",
     "joi-objectid": "^2.0.0",
+    "lodash": "^4.17.10",
     "mongoose": "^5.1.6",
     "morgan": "^1.9.0",
     "nodemon": "^1.17.5"
