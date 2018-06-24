@@ -2,10 +2,22 @@ const express = require('express');
 const startupDebug = require('debug')('app:start');
 const app = express();
 const morgan = require('morgan');
+const config = require('config');
 const mongoose = require('mongoose');
 const mongoDebug = require('debug')('app:mongo')
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
+const genres = require('./routes/genres');
+const customers = require('./routes/customers');
+const movies = require('./routes/movies');
+const rentals = require('./routes/rentals')
+const users = require('./routes/users');
+const auth = require('./routes/auth');
+
+if(!config.get('jwtPrivateKey')){
+    console.error('FATAL ERROR: vidly_jwtPrivateKey environment variable is not set, Authentication will not work');
+    process.exit(1);
+}
 
 //connects to the database
 mongoose.connect('mongodb://localhost/vidly')
@@ -20,22 +32,11 @@ app.use(morgan('tiny'));
 //app.use(express.static('public'));
 
 //Routes
-const genres = require('./routes/genres');
 app.use('/api/genres', genres);
-
-const customers = require('./routes/customers');
 app.use('/api/customers', customers);
-
-const movies = require('./routes/movies');
 app.use('/api/movies', movies);
-
-const rentals = require('./routes/rentals')
 app.use('/api/rentals', rentals);
-
-const users = require('./routes/users');
 app.use('/api/users', users);
-
-const auth = require('./routes/auth');
 app.use('/api/auth', auth);
 
 const port = process.env.PORT || 3000;
