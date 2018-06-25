@@ -1,4 +1,8 @@
-require('express-async-errors');
+require('express-async-errors'); //monkey patches our routes, wraps in try/catch, uses last middleware
+//in pipeline to handle exceptions
+
+const winston = require('winston');
+require('winston-mongodb');
 const express = require('express');
 const startupDebug = require('debug')('app:start');
 const app = express();
@@ -15,6 +19,13 @@ const rentals = require('./routes/rentals')
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 const error = require('./middleware/error');
+
+winston.add(winston.transports.File, {filename: 'logfile.log'}); //file log
+winston.add(winston.transports.MongoDB, {
+    db: 'mongodb://localhost/vidly',
+    level: 'error' //only error messages will be logged by winston
+}); //database log
+
 //$env:vidly_jwtPrivateKey='12345'
 //$env:DEBUG='app:start,app:mongo'
 if(!config.get('jwtPrivateKey')){
