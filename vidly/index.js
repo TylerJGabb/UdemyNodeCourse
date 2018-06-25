@@ -1,3 +1,4 @@
+require('express-async-errors');
 const express = require('express');
 const startupDebug = require('debug')('app:start');
 const app = express();
@@ -13,8 +14,9 @@ const movies = require('./routes/movies');
 const rentals = require('./routes/rentals')
 const users = require('./routes/users');
 const auth = require('./routes/auth');
-
+const error = require('./middleware/error');
 //$env:vidly_jwtPrivateKey='12345'
+//$env:DEBUG='app:start,app:mongo'
 if(!config.get('jwtPrivateKey')){
     console.error('FATAL ERROR: vidly_jwtPrivateKey environment variable is not set, Authentication will not work');
     process.exit(1);
@@ -38,6 +40,11 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+
+app.use(error); //only invoked when next() is called
+//express-async-errors monkey-patches our code and wraps all requests
+//in code similar to what we have in middleware/async.js
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => startupDebug(`Listening on ${port}.`));

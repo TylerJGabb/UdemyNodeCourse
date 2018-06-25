@@ -6,8 +6,9 @@ const bcrypt = require('bcrypt');
 const auth = require('../middleware/auth');//authorization
 
 router.get('/me', auth, async (req, res) => {
-    console.log(req.user);
-    const user = await User.findById(req.user._id).select('-password'); //req.user introduced by authorization middleware
+    //the current user comes from the token in the request header
+    //req.user introduced by authorization middleware
+    const user = await User.findById(req.user._id).select('-password'); //remove password
     res.status(200).send(user);
 });
 
