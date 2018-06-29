@@ -1,2 +1,4 @@
 .vscode/
 node_modules/
+vidly/logfile.log
+vidly/uncaughtExceptions.log
