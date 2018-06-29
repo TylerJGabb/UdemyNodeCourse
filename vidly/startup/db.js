@@ -5,5 +5,6 @@ module.exports = function(){
     //connects to the database
     mongoose.connect('mongodb://localhost/vidly')
         .then(() => winston.info('Connected to MongoDB...'))
-        .catch((err) => mongoDebug('Could not connect to MongoDB...', err));
+        //.catch((err) => mongoDebug('Could not connect to MongoDB...', err));
+        //remove catch so that our error handling will handle the rejeccted promise
 }
