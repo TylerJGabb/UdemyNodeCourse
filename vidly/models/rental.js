@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 
-const Rental = mongoose.model('Rental', new mongoose.Schema({
+const rentalSchema = new mongoose.Schema({
     customer: {
         type: new mongoose.Schema({
             name: {
@@ -52,7 +52,21 @@ const Rental = mongoose.model('Rental', new mongoose.Schema({
         type: Date //not required because when the movie is out
         //this field will be null
     }
-}));
+});
+
+//gets the number of days (floating point number) that the movie has been out
+rentalSchema.methods.getDaysOut = function(){
+    var returnDate = this.dateReturned ? this.dateReturned : Date.now();
+    var timespan = returnDate - this.dateRented;
+    return timespan/(1000*60*60*24);
+}
+
+//calculates the cost given the time that the movie has been out
+rentalSchema.methods.calculateCost = function(){
+    return this.getDaysOut()*this.movie.dailyRentalRate;
+}
+
+const Rental = mongoose.model('Rental', rentalSchema);
 
 function validateRental(rental) {
     const schema = {
