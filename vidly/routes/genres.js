@@ -39,12 +39,13 @@ router.put('/:id', auth, (req, res) => {
     .catch(e => res.status(500).send(e));
 })
 
-router.delete('/:id', [auth, admin], (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
     // req -> auth -> admin -> here
     const id = req.params.id;
-    Genre.findByIdAndRemove(id)
-    .then(result => res.status(200).send(result))
-    .catch(e => res.status(500).send(e));
+    var genre = await Genre.findOne({_id : id});
+    if(!genre) return res.status(404).send(`Genre not found with id ${id}`);
+    await Genre.remove({_id : id});
+    res.status(200).send(genre);
 });
 
 module.exports = router;
