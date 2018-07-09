@@ -1,7 +1,3 @@
-require('express-async-errors'); //monkey patches our routes, wraps in try/catch
-// uses last middleware in pipeline to handle exceptions
-//this allows logging to a nosql db using mongoose.
-
 const winston = require('winston');
 require('winston-mongodb');
 
