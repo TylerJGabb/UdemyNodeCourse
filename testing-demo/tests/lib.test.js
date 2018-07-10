@@ -60,4 +60,20 @@ describe('getProduct', () => {
     //or .toHaveProperty which checks for single paths
     expect(result).toHaveProperty('id', 1);
   });
-})
+});
+
+describe('registgerUser', () => {
+  it('should throw if username is falsy', () => {
+    //null, undefined, nan, '', 0, [], {}, ....
+    const args = [null, undefined, NaN, '', 0, false];
+    args.forEach(a => {
+      expect(() => { lib.registerUser(a); }).toThrow();
+    })
+  });
+
+  it('should return valid obj if valid username is passed', () => {
+    const result = lib.registerUser('tyler');
+    expect(result).toMatchObject({username: 'tyler'});
+    expect(result.id).toBeGreaterThan(0);
+  });
+});
