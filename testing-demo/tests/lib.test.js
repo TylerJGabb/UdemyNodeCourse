@@ -48,3 +48,16 @@ describe('getCurrencies', () => {
     expect(result).toEqual(expect.arrayContaining(['USD','AUD','EUR']));
   });
 });
+
+describe('getProduct', () => {
+  it('should return the product with the given id', () => {
+    const result = lib.getProduct(1);
+    //expect(result).toEqual({ id: 1, price: 10}); //do not use toBe, that compares memory adresses.
+
+    //bettet to use .toMatchObject which checks for multiple paths
+    expect(result).toMatchObject({id:1, price:10}); //like _.pick(...);
+
+    //or .toHaveProperty which checks for single paths
+    expect(result).toHaveProperty('id', 1);
+  });
+})
