@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/playground')
     .then(() => console.log('Connected to MongoDB...'))
     .catch((err) => console.error('Could not connect to MongoDB...', err));
+//database will not be created until we save something to it for the first time
 
 //defines the shape of Course documents in our MondoDB database
 const courseSchema = new mongoose.Schema({
@@ -19,12 +20,6 @@ const courseSchema = new mongoose.Schema({
 
 //create a Course class from the schema
 const Course = mongoose.model('Course', courseSchema);
-const course = new Course({
-    name: 'Angular Course',
-    author: 'Mosh',
-    tags : ['angular', 'frontend'],
-    isPublished : true
-});
 
 //save to the database
 async function saveCourse(course){
@@ -57,9 +52,32 @@ async function getCourses(){
     return courses
 }
 
+async function makeNewCourse(){
+    const course = new Course({
+        name: 'How to git guud at wow',
+        author: 'IntPointer',
+        tags : ['gaming', 'nolife'],
+        isPublished : false
+    });
+    await saveCourse(course);
+}
+
+async function getCoursesByAuthor(author){
+    const courses = Course.find({author: author})
+        .select({name: 1, author: 1});
+    return courses;
+}
+
 
 async function run(){
     const courses = await getCourses();
     console.log(courses);
 }
-run()
+
+async function findCoursesByIntPointer(){
+    const courses = await(getCoursesByAuthor('IntPointer'));
+    console.log(courses);
+}
+
+findCoursesByIntPointer();
+//test();
